@@ -7,10 +7,9 @@ from __future__ import annotations
 import argparse
 import os
 import logging
-import sys
 
-# import pandas as pd
-# import pyodbc
+import pandas as pd
+import pyodbc
 
 
 class AccessToExcel:
@@ -50,13 +49,13 @@ class AccessToExcel:
     def write_df_to_xlsx(self):
         """Method uses _find_all_tables generator to generate DF's and load ot to xlsx file with multiple sheets"""
 
-        self.file_path = os.path.join(self.target_dir, os.path.basename(self.source_file).replace('accdb', 'xlsx'))
+        file_path = os.path.join(self.target_dir, os.path.basename(self.source_file).replace('accdb', 'xlsx'))
 
-        with pd.ExcelWriter(self.file_path) as target_file:
-            logging.info(f"Created Excel file: {self.file_path}.")
+        with pd.ExcelWriter(file_path) as target_file:
+            logging.info(f"Created Excel file: {file_path}.")
 
             for df in self._find_all_tables():
-                logging.info(f"Loading sheet: {df.name} into {self.file_path}")
+                logging.info(f"Loading sheet: {df.name} into {file_path}")
                 df.to_excel(target_file, sheet_name=df.name, index=False)
 
 
