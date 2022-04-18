@@ -2,12 +2,15 @@
 This module contains class AccessUnzip.
 Class is designed to convert .accdb files to .xlsx and send it via SFTP.
 """
+from __future__ import annotations
+
+import argparse
 import os
 import logging
 import sys
 
-import pandas as pd
-import pyodbc
+# import pandas as pd
+# import pyodbc
 
 
 class AccessToExcel:
@@ -58,13 +61,20 @@ class AccessToExcel:
 
 
 if __name__ == '__main__':
-    kwargs = dict(arg.split('=') for arg in sys.argv[1:])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--source_file', type=str, required=True)
+    parser.add_argument('--target_dir', type=str, required=True)
+    parser.add_argument('--logs', type=str)
+    kwargs = vars(parser.parse_args())
 
     if 'logs' in kwargs:
-        logging.basicConfig(filename=kwargs.get('logs'), filemode='a', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        logging.basicConfig(
+            filename=kwargs.get('logs'),
+            filemode='a',
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s'
+        )
         kwargs.pop('logs')
-
     obj = AccessToExcel(**kwargs)
     obj()
-    logging.info(f"FINISHED")
 
